@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
       console.log('ORDER PRODUCTS:', order.products);
       console.log('IS ARRAY:', Array.isArray(order.products));
 
-      const orderProducts = JSON.parse(order.products);
+      const orderProducts = order.products;
 
       const products = await Promise.all(
         orderProducts.map(async (product) => {
@@ -89,7 +89,7 @@ router.get('/:orderId', async (req, res) => {
   }
 
   if (expand === 'products') {
-    const orderProducts = JSON.parse(order.products);
+    const orderProducts = order.products;
 
     const products = await Promise.all(orderProducts.map(async (product) => {
       const productDetails = await Product.findById(product.productId);
