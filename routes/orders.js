@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 
       const products = await Promise.all(
         orderProducts.map(async (product) => {
-          const productDetails = await Product.findById(product.productId);
+          const productDetails = await Product.findByPk(product.productId);
 
           return {
             ...product,
@@ -47,11 +47,11 @@ router.post('/', async (req, res) => {
 
   let totalCostCents = 0;
   const products = await Promise.all(cartItems.map(async (item) => {
-    const product = await Product.findById(item.productId);
+    const product = await Product.findByPk(item.productId);
     if (!product) {
       throw new Error(`Product not found: ${item.productId}`);
     }
-    const deliveryOption = await DeliveryOption.findById(item.deliveryOptionId);
+    const deliveryOption = await DeliveryOption.findByPk(item.deliveryOptionId);
     if (!deliveryOption) {
       throw new Error(`Invalid delivery option: ${item.deliveryOptionId}`);
     }
@@ -83,7 +83,7 @@ router.get('/:orderId', async (req, res) => {
   const { orderId } = req.params;
   const expand = req.query.expand;
 
-  let order = await Order.findById(orderId);
+  let order = await Order.findByPk(orderId);
   if (!order) {
     return res.status(404).json({ error: 'Order not found' });
   }
@@ -92,7 +92,8 @@ router.get('/:orderId', async (req, res) => {
     const orderProducts = order.products;
 
     const products = await Promise.all(orderProducts.map(async (product) => {
-      const productDetails = await Product.findById(product.productId);
+      
+      const productDetails = await Product.findByPk(product.productId);
       return {
         ...product,
         product: productDetails
